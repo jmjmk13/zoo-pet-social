@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Zoo - 宠物社交平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #FF6B6B;
+            --secondary-color: #4ECDC4;
+            --accent-color: #FFE66D;
+            --text-primary: #2C3E50;
+            --text-secondary: #7F8C8D;
+            --bg-light: #F8F9FA;
+            --white: #FFFFFF;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* App Container */
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--white);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #FF8E8E);
+            color: var(--white);
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            opacity: 0.95;
+            margin-top: 4px;
+        }
+
+        /* Content Area */
+        .content {
+            padding-bottom: 80px;
+        }
+
+        .page {
+            display: none;
+            padding: 20px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Pet Card */
+        .pet-card {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .pet-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--secondary-color);
+        }
+
+        .pet-info h3 {
+            font-size: 18px;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .pet-info p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .pet-badges {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .badge {
+            background: var(--bg-light);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .badge.primary {
+            background: linear-gradient(135deg, var(--primary-color), #FF8E8E);
+            color: var(--white);
+        }
+
+        /* Post Card */
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .post-user-info {
+            flex: 1;
+        }
+
+        .post-user-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .post-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .post-content {
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .post-image {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 24px;
+            padding-top: 12px;
+            border-top: 1px solid var(--bg-light);
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .action-btn.liked {
+            color: var(--primary-color);
+        }
+
+        /* Walk Invitation Card */
+        .walk-card {
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .walk-time {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 8px;
+        }
+
+        .walk-location {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .join-btn {
+            background: linear-gradient(135deg, var(--secondary-color), #6EE7B7);
+            color: var(--white);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .join-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.4);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 480px;
+            width: 100%;
+            background: var(--white);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--bg-light);
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #FF8E8E);
+            color: var(--white);
+            border: none;
+            padding: 14px 28px;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-primary);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary-color);
+            color: var(--white);
+        }
+
+        /* Profile Section */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 16px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .empty-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        /* Tags */
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            background: var(--bg-light);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tag.active {
+            background: linear-gradient(135deg, var(--primary-color), #FF8E8E);
+            color: var(--white);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            padding: 24px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Avatar Upload */
+        .avatar-upload {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--bg-light);
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 3px dashed var(--text-secondary);
+            overflow: hidden;
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-preview-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Emoji */
+        .emoji {
+            font-style: normal;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .header {
+                padding: 16px;
+            }
+
+            .page {
+                padding: 16px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <h1><span class="emoji">🐾</span> Zoo</h1>
+            <p class="header-subtitle">让宠物成为你的社交名片</p>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content">
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+                <div id="feed-container">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Discover Page -->
+            <div id="discover-page" class="page">
+                <div class="tag-group">
+                    <button class="tag active" data-filter="all">全部</button>
+                    <button class="tag" data-filter="dog">狗狗</button>
+                    <button class="tag" data-filter="cat">猫咪</button>
+                    <button class="tag" data-filter="bird">鸟类</button>
+                    <button class="tag" data-filter="other">其他</button>
+                </div>
+                <div id="nearby-pets">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Walk Page -->
+            <div id="walk-page" class="page">
+                <button class="btn-primary" onclick="showCreateWalkModal()" style="margin-bottom: 20px;">
+                    <span class="emoji">🚶</span> 发起遛弯邀请
+                </button>
+                <div id="walk-list">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profile-page" class="page">
+                <div id="profile-content">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-item active" data-page="home">
+                <span class="nav-icon">🏠</span>
+                <span>首页</span>
+            </button>
+            <button class="nav-item" data-page="discover">
+                <span class="nav-icon">🔍</span>
+                <span>发现</span>
+            </button>
+            <button class="nav-item" data-page="walk">
+                <span class="nav-icon">🚶</span>
+                <span>遛弯</span>
+            </button>
+            <button class="nav-item" data-page="profile">
+                <span class="nav-icon">👤</span>
+                <span>我的</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Create Pet Modal -->
+    <div id="create-pet-modal" class="modal-overlay">
+        <div class="modal">
+            <h3 class="modal-header"><span class="emoji">🐾</span> 创建你的宠物档案</h3>
+            <div class="avatar-upload">
+                <div class="avatar-preview" onclick="document.getElementById('pet-avatar-input').click()">
+                    <span class="avatar-preview-text">点击上传<br>宠物头像</span>
+                </div>
+                <input type="file" id="pet-avatar-input" accept="image/*" style="display: none;" onchange="previewAvatar(this)">
+            </div>
+            <div class="form-group">
+                <label>宠物昵称</label>
+                <input type="text" id="pet-name" placeholder="你的宠物叫什么？">
+            </div>
+            <div class="form-group">
+                <label>宠物种类</label>
+                <select id="pet-type">
+                    <option value="">请选择</option>
+                    <option value="dog">狗狗</option>
+                    <option value="cat">猫咪</option>
+                    <option value="bird">鸟类</option>
+                    <option value="other">其他</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>品种</label>
+                <input type="text" id="pet-breed" placeholder="如：金毛、英短...">
+            </div>
+            <div class="form-group">
+                <label>年龄</label>
+                <input type="text" id="pet-age" placeholder="如：2岁">
+            </div>
+            <div class="form-group">
+                <label>性格特点</label>
+                <textarea id="pet-personality" placeholder="描述一下你的宠物性格..."></textarea>
+                <div class="personality-tags" style="margin-top: 12px;">
+                    <span style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; display: block;">选择常用标签：</span>
+                    <div class="tag-group">
+                        <button class="tag" onclick="addPersonalityTag('活泼好动')">活泼好动</button>
+                        <button class="tag" onclick="addPersonalityTag('温柔亲人')">温柔亲人</button>
+                        <button class="tag" onclick="addPersonalityTag('粘人')">粘人</button>
+                        <button class="tag" onclick="addPersonalityTag('高冷')">高冷</button>
+                        <button class="tag" onclick="addPersonalityTag('机灵聪明')">机灵聪明</button>
+                        <button class="tag" onclick="addPersonalityTag('安静乖巧')">安静乖巧</button>
+                        <button class="tag" onclick="addPersonalityTag('勇敢胆大')">勇敢胆大</button>
+                        <button class="tag" onclick="addPersonalityTag('慵懒')">慵懒</button>
+                        <button class="tag" onclick="addPersonalityTag('调皮捣蛋')">调皮捣蛋</button>
+                        <button class="tag" onclick="addPersonalityTag('忠诚守护')">忠诚守护</button>
+                        <button class="tag" onclick="addPersonalityTag('爱撒娇')">爱撒娇</button>
+                        <button class="tag" onclick="addPersonalityTag('贪吃')">贪吃</button>
+                        <button class="tag" onclick="addPersonalityTag('爱睡觉')">爱睡觉</button>
+                        <button class="tag" onclick="addPersonalityTag('喜欢玩耍')">喜欢玩耍</button>
+                        <button class="tag" onclick="addPersonalityTag('性格温和')">性格温和</button>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="createPet()">创建档案</button>
+        </div>
+    </div>
+
+    <!-- Create Post Modal -->
+    <div id="create-post-modal" class="modal-overlay">
+        <div class="modal">
+            <h3 class="modal-header"><span class="emoji">✏️</span> 分享宠物日常</h3>
+            <div class="form-group">
+                <label>分享内容</label>
+                <textarea id="post-content" placeholder="今天你家主子做了什么趣事？"></textarea>
+            </div>
+            <div class="form-group">
+                <label>添加图片</label>
+                <input type="file" id="post-image-input" accept="image/*">
+            </div>
+            <button class="btn-primary" onclick="createPost()">发布</button>
+        </div>
+    </div>
+
+    <!-- Create Walk Modal -->
+    <div id="create-walk-modal" class="modal-overlay">
+        <div class="modal">
+            <h3 class="modal-header"><span class="emoji">🚶</span> 发起遛弯邀请</h3>
+            <div class="form-group">
+                <label>遛弯时间</label>
+                <input type="datetime-local" id="walk-time">
+            </div>
+            <div class="form-group">
+                <label>集合地点</label>
+                <input type="text" id="walk-location" placeholder="如：中央公园东门">
+            </div>
+            <div class="form-group">
+                <label>补充说明</label>
+                <textarea id="walk-note" placeholder="想对其他狗友说的话..."></textarea>
+            </div>
+            <button class="btn-primary" onclick="createWalkInvitation()">发布邀请</button>
+        </div>
+    </div>
+
+    <script>
+        // Mock Data
+        let currentPet = null;
+        let petAvatar = null;
+
+        const mockPets = [
+            {
+                id: 1,
+                name: '豆豆',
+                type: 'dog',
+                breed: '金毛',
+                age: '3岁',
+                personality: '活泼好动，喜欢交朋友',
+                avatar: 'https://images.unsplash.com/photo-1633722715463-d30f4f325e24?w=200&h=200&fit=crop',
+                distance: '500m'
+            },
+            {
+                id: 2,
+                name: '小橘',
+                type: 'cat',
+                breed: '橘猫',
+                age: '2岁',
+                personality: '慵懒可爱，爱睡觉',
+                avatar: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&h=200&fit=crop',
+                distance: '800m'
+            },
+            {
+                id: 3,
+                name: '旺财',
+                type: 'dog',
+                breed: '柯基',
+                age: '1岁',
+                personality: '短腿萌宠，特别粘人',
+                avatar: 'https://images.unsplash.com/photo-1612536057832-2ff7ead58194?w=200&h=200&fit=crop',
+                distance: '1.2km'
+            },
+            {
+                id: 4,
+                name: '咪咪',
+                type: 'cat',
+                breed: '英短',
+                age: '4岁',
+                personality: '高冷优雅，偶尔撒娇',
+                avatar: 'https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=200&h=200&fit=crop',
+                distance: '1.5km'
+            },
+            {
+                id: 5,
+                name: '皮皮',
+                type: 'bird',
+                breed: '虎皮鹦鹉',
+                age: '1岁',
+                personality: '会说话的小机灵',
+                avatar: 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=200&h=200&fit=crop',
+                distance: '2km'
+            }
+        ];
+
+        const mockPosts = [
+            {
+                id: 1,
+                petName: '豆豆',
+                petType: 'dog',
+                petAvatar: 'https://images.unsplash.com/photo-1633722715463-d30f4f325e24?w=200&h=200&fit=crop',
+                content: '今天带豆豆去公园玩了，认识了好多新朋友！它特别喜欢跟金毛玩，两个大个子跑来跑去超开心 🐕',
+                image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=400&fit=crop',
+                time: '2小时前',
+                likes: 128,
+                comments: 24
+            },
+            {
+                id: 2,
+                petName: '小橘',
+                petType: 'cat',
+                petAvatar: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&h=200&fit=crop',
+                content: '我家橘猫又在晒太阳了，简直是生活大师 😴',
+                image: 'https://images.unsplash.com/photo-1503777119540-ce54b422baff?w=600&h=400&fit=crop',
+                time: '4小时前',
+                likes: 256,
+                comments: 32
+            },
+            {
+                id: 3,
+                petName: '旺财',
+                petType: 'dog',
+                petAvatar: 'https://images.unsplash.com/photo-1612536057832-2ff7ead58194?w=200&h=200&fit=crop',
+                content: '短腿柯基的日常：被所有东西挡住视线 🐶',
+                time: '昨天',
+                likes: 89,
+                comments: 12
+            }
+        ];
+
+        const mockWalks = [
+            {
+                id: 1,
+                petName: '豆豆',
+                petAvatar: 'https://images.unsplash.com/photo-1633722715463-d30f4f325e24?w=200&h=200&fit=crop',
+                time: '今天 下午 4:00',
+                location: '中央公园东门',
+                note: '金毛豆豆约大家一起遛弯，期待认识新朋友！',
+                participants: 3
+            },
+            {
+                id: 2,
+                petName: '旺财',
+                petAvatar: 'https://images.unsplash.com/photo-1612536057832-2ff7ead58194?w=200&h=200&fit=crop',
+                time: '明天 上午 9:00',
+                location: '滨江步道',
+                note: '周末晨遛，欢迎小短腿柯基家族加入！',
+                participants: 5
+            },
+            {
+                id: 3,
+                petName: '小橘',
+                petAvatar: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&h=200&fit=crop',
+                time: '周六 下午 3:00',
+                location: '宠物咖啡厅',
+                note: '猫咪聚会，需要提前预约哦~',
+                participants: 8
+            }
+        ];
+
+        // Initialize App
+        function init() {
+            const savedPet = localStorage.getItem('zooPet');
+            if (savedPet) {
+                currentPet = JSON.parse(savedPet);
+                showApp();
+            } else {
+                showCreatePetModal();
+            }
+        }
+
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const page = this.dataset.page;
+                showPage(page);
+            });
+        });
+
+        function showPage(pageName) {
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.page === pageName) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Show page
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(`${pageName}-page`).classList.add('active');
+
+            // Load content
+            if (pageName === 'home') loadFeed();
+            if (pageName === 'discover') loadNearbyPets();
+            if (pageName === 'walk') loadWalkList();
+            if (pageName === 'profile') loadProfile();
+        }
+
+        // Show/Hide Modals
+        function showCreatePetModal() {
+            document.getElementById('create-pet-modal').classList.add('active');
+        }
+
+        function hideCreatePetModal() {
+            document.getElementById('create-pet-modal').classList.remove('active');
+        }
+
+        function showCreatePostModal() {
+            document.getElementById('create-post-modal').classList.add('active');
+        }
+
+        function hideCreatePostModal() {
+            document.getElementById('create-post-modal').classList.remove('active');
+            document.getElementById('post-content').value = '';
+            document.getElementById('post-image-input').value = '';
+        }
+
+        function showCreateWalkModal() {
+            document.getElementById('create-walk-modal').classList.add('active');
+        }
+
+        function hideCreateWalkModal() {
+            document.getElementById('create-walk-modal').classList.remove('active');
+        }
+
+        // Add Personality Tag
+        function addPersonalityTag(tag) {
+            const textarea = document.getElementById('pet-personality');
+            const currentValue = textarea.value.trim();
+            
+            if (currentValue === '') {
+                textarea.value = tag;
+            } else {
+                // Check if tag already exists
+                const tags = currentValue.split(/[,，、\s]+/);
+                if (!tags.includes(tag)) {
+                    textarea.value = currentValue + '、' + tag;
+                }
+            }
+        }
+
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // Pet Avatar Preview
+        function previewAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    petAvatar = e.target.result;
+                    const preview = input.parentElement.querySelector('.avatar-preview');
+                    preview.innerHTML = `<img src="${petAvatar}" alt="avatar">`;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Create Pet Profile
+        function createPet() {
+            const name = document.getElementById('pet-name').value.trim();
+            const type = document.getElementById('pet-type').value;
+            const breed = document.getElementById('pet-breed').value.trim();
+            const age = document.getElementById('pet-age').value.trim();
+            const personality = document.getElementById('pet-personality').value.trim();
+
+            if (!name || !type || !breed) {
+                alert('请填写完整的宠物信息');
+                return;
+            }
+
+            currentPet = {
+                id: Date.now(),
+                name,
+                type,
+                breed,
+                age,
+                personality,
+                avatar: petAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=FF6B6B&color=fff&size=200`,
+                createdAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('zooPet', JSON.stringify(currentPet));
+            hideCreatePetModal();
+            showApp();
+        }
+
+        // Show App
+        function showApp() {
+            loadFeed();
+        }
+
+        // Load Feed
+        function loadFeed() {
+            const container = document.getElementById('feed-container');
+
+            // Add floating action button
+            let html = `
+                <button class="btn-secondary" onclick="showCreatePostModal()" style="position: fixed; bottom: 100px; right: 20px; border-radius: 50%; width: 56px; height: 56px; padding: 0; font-size: 24px; box-shadow: var(--shadow-hover);">
+                    <span class="emoji">✏️</span>
+                </button>
+            `;
+
+            mockPosts.forEach(post => {
+                html += createPostHTML(post);
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Create Post HTML
+        function createPostHTML(post) {
+            return `
+                <div class="card fade-in">
+                    <div class="post-header">
+                        <img src="${post.petAvatar}" alt="${post.petName}" class="post-avatar">
+                        <div class="post-user-info">
+                            <div class="post-user-name">${post.petName}</div>
+                            <div class="post-time">${post.time}</div>
+                        </div>
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                    ${post.image ? `<img src="${post.image}" alt="post image" class="post-image">` : ''}
+                    <div class="post-actions">
+                        <button class="action-btn" onclick="toggleLike(this, ${post.id})">
+                            <span class="emoji">❤️</span> ${post.likes}
+                        </button>
+                        <button class="action-btn">
+                            <span class="emoji">💬</span> ${post.comments}
+                        </button>
+                        <button class="action-btn">
+                            <span class="emoji">📤</span> 分享
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Toggle Like
+        function toggleLike(btn, postId) {
+            btn.classList.toggle('liked');
+            const icon = btn.querySelector('.emoji');
+            if (btn.classList.contains('liked')) {
+                icon.textContent = '❤️';
+            } else {
+                icon.textContent = '🤍';
+            }
+        }
+
+        // Create Post
+        function createPost() {
+            const content = document.getElementById('post-content').value.trim();
+            if (!content) {
+                alert('请输入分享内容');
+                return;
+            }
+
+            const post = {
+                id: Date.now(),
+                petName: currentPet.name,
+                petType: currentPet.type,
+                petAvatar: currentPet.avatar,
+                content,
+                time: '刚刚',
+                likes: 0,
+                comments: 0
+            };
+
+            mockPosts.unshift(post);
+            hideCreatePostModal();
+            loadFeed();
+        }
+
+        // Load Nearby Pets
+        function loadNearbyPets(filter = 'all') {
+            const container = document.getElementById('nearby-pets');
+            let filteredPets = filter === 'all' ? mockPets : mockPets.filter(p => p.type === filter);
+
+            let html = '';
+            filteredPets.forEach(pet => {
+                html += `
+                    <div class="card pet-card fade-in">
+                        <img src="${pet.avatar}" alt="${pet.name}" class="pet-avatar">
+                        <div class="pet-info">
+                            <h3>${pet.name}</h3>
+                            <p>${pet.breed} · ${pet.age}</p>
+                            <p>${pet.personality}</p>
+                            <div class="pet-badges">
+                                <span class="badge primary">${pet.distance}</span>
+                            </div>
+                        </div>
+                        <button class="btn-secondary" onclick="addFriend(${pet.id})">加好友</button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Filter Tags
+        document.querySelectorAll('.tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                loadNearbyPets(this.dataset.filter);
+            });
+        });
+
+        // Add Friend
+        function addFriend(petId) {
+            const pet = mockPets.find(p => p.id === petId);
+            alert(`已向 ${pet.name} 发送好友邀请！`);
+        }
+
+        // Load Walk List
+        function loadWalkList() {
+            const container = document.getElementById('walk-list');
+            let html = '';
+
+            mockWalks.forEach(walk => {
+                html += `
+                    <div class="card walk-card fade-in">
+                        <div class="post-header">
+                            <img src="${walk.petAvatar}" alt="${walk.petName}" class="post-avatar">
+                            <div class="post-user-info">
+                                <div class="post-user-name">${walk.petName} 发起</div>
+                            </div>
+                        </div>
+                        <div class="walk-time">${walk.time}</div>
+                        <div class="walk-location">📍 ${walk.location}</div>
+                        <div class="post-content">${walk.note}</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+                            <span style="color: var(--text-secondary); font-size: 13px;">${walk.participants} 人已报名</span>
+                            <button class="join-btn" onclick="joinWalk(${walk.id})">立即报名</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Create Walk Invitation
+        function createWalkInvitation() {
+            const time = document.getElementById('walk-time').value;
+            const location = document.getElementById('walk-location').value.trim();
+            const note = document.getElementById('walk-note').value.trim();
+
+            if (!time || !location) {
+                alert('请填写完整信息');
+                return;
+            }
+
+            const walk = {
+                id: Date.now(),
+                petName: currentPet.name,
+                petAvatar: currentPet.avatar,
+                time: formatWalkTime(time),
+                location,
+                note: note || '期待一起遛弯！',
+                participants: 1
+            };
+
+            mockWalks.unshift(walk);
+            hideCreateWalkModal();
+            loadWalkList();
+        }
+
+        // Format Walk Time
+        function formatWalkTime(datetime) {
+            const date = new Date(datetime);
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            let dayText = '今天';
+            if (date.toDateString() === tomorrow.toDateString()) {
+                dayText = '明天';
+            } else if (date > tomorrow) {
+                dayText = `${date.getMonth() + 1}月${date.getDate()}日`;
+            }
+
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const timeText = `${hours > 12 ? '下午' : '上午'} ${hours > 12 ? hours - 12 : hours}:${minutes.toString().padStart(2, '0')}`;
+
+            return `${dayText} ${timeText}`;
+        }
+
+        // Join Walk
+        function joinWalk(walkId) {
+            const walk = mockWalks.find(w => w.id === walkId);
+            walk.participants++;
+            alert(`已成功报名 ${walk.petName} 的遛弯活动！`);
+            loadWalkList();
+        }
+
+        // Load Profile
+        function loadProfile() {
+            const container = document.getElementById('profile-content');
+
+            if (!currentPet) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🐾</div>
+                        <p class="empty-text">还没有创建宠物档案</p>
+                        <button class="btn-primary" onclick="showCreatePetModal()">创建档案</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="profile-header fade-in">
+                    <img src="${currentPet.avatar}" alt="${currentPet.name}" class="profile-avatar">
+                    <h2 class="profile-name">${currentPet.name}</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 8px;">${currentPet.breed} · ${currentPet.age}</p>
+                    <p style="color: var(--text-secondary); font-size: 14px;">${currentPet.personality}</p>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">好友</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">28</div>
+                            <div class="stat-label">动态</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">156</div>
+                            <div class="stat-label">获赞</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-secondary" style="width: 100%; margin-bottom: 20px;" onclick="editProfile()">编辑档案</button>
+                <button class="btn-secondary" style="width: 100%; margin-bottom: 20px; background: var(--primary-color); color: white;" onclick="shareProfile()">分享档案</button>
+                <button class="btn-secondary" style="width: 100%;" onclick="logout()">退出登录</button>
+            `;
+        }
+
+        // Edit Profile
+        function editProfile() {
+            showCreatePetModal();
+            document.getElementById('pet-name').value = currentPet.name;
+            document.getElementById('pet-type').value = currentPet.type;
+            document.getElementById('pet-breed').value = currentPet.breed;
+            document.getElementById('pet-age').value = currentPet.age;
+            document.getElementById('pet-personality').value = currentPet.personality;
+        }
+
+        // Share Profile
+        function shareProfile() {
+            alert('分享功能开发中...');
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                localStorage.removeItem('zooPet');
+                currentPet = null;
+                showCreatePetModal();
+            }
+        }
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>
