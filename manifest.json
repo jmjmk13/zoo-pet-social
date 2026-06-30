@@ -1,0 +1,51 @@
+{
+  "name": "Zoo - 宠物社交",
+  "short_name": "Zoo",
+  "description": "让宠物成为你的社交名片",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fdf2f8",
+  "theme_color": "#ec4899",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/home.png",
+      "sizes": "375x812",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshots/discover.png",
+      "sizes": "375x812",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "categories": ["social", "pets", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "发布动态",
+      "short_name": "发布",
+      "description": "分享宠物日常",
+      "url": "/post"
+    },
+    {
+      "name": "附近宠物",
+      "short_name": "发现",
+      "description": "发现附近的小伙伴",
+      "url": "/discover"
+    }
+  ]
+}

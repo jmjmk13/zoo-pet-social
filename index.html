@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#ec4899" />
+    <meta name="description" content="Zoo - 让宠物成为你的社交名片，发现附近的宠物主人，一起遛弯交友！" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Zoo" />
+    <link rel="manifest" href="/zoo-pet-social/manifest.json" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+    <title>Zoo - 宠物社交</title>
+    <script type="module" crossorigin src="/zoo-pet-social/assets/index-BlhK6DqK.js"></script>
+    <link rel="stylesheet" crossorigin href="/zoo-pet-social/assets/index-VazHVOuV.css">
+  <link rel="manifest" href="/zoo-pet-social/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/zoo-pet-social/registerSW.js"></script></head>
+  <body>
+    <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js');
+        });
+      }
+    </script>
+  </body>
+</html>

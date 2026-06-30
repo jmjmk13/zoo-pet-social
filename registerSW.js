@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/zoo-pet-social/sw.js', { scope: '/zoo-pet-social/' })})}
